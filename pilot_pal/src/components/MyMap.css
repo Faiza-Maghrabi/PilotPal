@@ -1,0 +1,4 @@
+/* overrides initial leaflet css rules */
+.leaflet-container {
+    background-color: rgb(189, 230, 243);
+}
