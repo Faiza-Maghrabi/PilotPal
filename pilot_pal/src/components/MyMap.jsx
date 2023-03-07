@@ -49,6 +49,8 @@ class MyMap extends Component {
                     zoom={3}>
 
                         <GeoJSON style={this.countryStyle} data={mapData.features} onEachFeature={this.onEachCountry}></GeoJSON>
+                        
+                        
                 </MapContainer> 
                 <h1 style={{textAlign: 'center'}}>Nav Bar</h1>
             </div>
