@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
-import { MapContainer, GeoJSON } from 'react-leaflet';
-import mapData from './../data/countries.json';
+import {MapContainer, GeoJSON } from 'react-leaflet';
+
+import countries from './../data/countries.json';
+import airports from './../data/airports.json';
+import L from 'leaflet';
+
 import 'leaflet/dist/leaflet.css';
 import './MyMap.css';
 
@@ -8,8 +12,9 @@ class MyMap extends Component {
     state = {};
 
     componentDidMount(){
-        console.log(mapData);
+        console.log(airports);
     }
+
 
     countryStyle = {
         fillColor: 'rgb(129, 235, 180)',
@@ -21,21 +26,41 @@ class MyMap extends Component {
     //pop ups when clicking on each country 
     //TO DO: change to onEachAirport to give weather
     onEachCountry = (country, layer) =>{
-        const countryName = country.properties.ADMIN;
+        //const countryName = country.properties.ADMIN;
 
         //layer represents the drawing of the country that we see on the screen
-        layer.bindPopup(countryName);
+        //layer.bindPopup(countryName);
         layer.addEventListener('click', function(e){
-            //look at event handles from year 1
+            //changing colour - IN PROGRESS
             console.log(layer)
             layer.options.fillColor = "blue";
             layer.options.color = "blue";
             layer.options.style = {};
         });
 
-        // function changeColour(e){
-        //    
-        // }
+    }
+
+    changeIcon = (latlng) =>{
+        //override leaflet's default marker with a circleMarker object
+        var x = latlng.geometry.coordinates[1]
+        var y = latlng.geometry.coordinates[0]
+        return L.circleMarker([x,y], {
+            fillColor: '#000000',
+            radius: 3,
+            weight: 5,
+            color: '#000000'
+        });
+
+    }
+
+    onEachPoint = (point, layer) =>{
+        //this part should be used when the user clicks on a point 
+        //place holder code gives popup with port name
+        //some airports have no name for name_en etc and some are fully in different alphabets
+        var portName = point.properties.name
+
+        //console.log(layer)
+        layer.bindPopup(portName);
     }
 
     //RENDERING MAP USING GEOJSON AND MAP COMPONENT
@@ -43,13 +68,15 @@ class MyMap extends Component {
         return(
             <div>
                 <h1 style ={{textAlign:"center"}}>Header bar</h1>
+                <div id="map"></div>
+
                 <MapContainer 
                     style={{height:'80vh'}}
-                    center={[0,0]} 
-                    zoom={3}>
+                    center={[50,0]} 
+                    zoom={5}>
 
-                        <GeoJSON style={this.countryStyle} data={mapData.features} onEachFeature={this.onEachCountry}></GeoJSON>
-                        
+                        <GeoJSON style={this.countryStyle} data={countries.features} onEachFeature={this.onEachCountry}></GeoJSON>
+                        <GeoJSON data={airports.features} pointToLayer={this.changeIcon} onEachFeature={this.onEachPoint}></GeoJSON>
                         
                 </MapContainer> 
                 <h1 style={{textAlign: 'center'}}>Nav Bar</h1>
