@@ -17,6 +17,8 @@ class MyMap extends Component {
 
 
     countryStyle = {
+        //rgb(129, 235, 180)'
+        
         fillColor: 'rgb(129, 235, 180)',
         fillOpacity: 1,
         color: 'rgb(41, 153, 95)',
@@ -31,11 +33,12 @@ class MyMap extends Component {
         //layer represents the drawing of the country that we see on the screen
         //layer.bindPopup(countryName);
         layer.addEventListener('click', function(e){
-            //changing colour - IN PROGRESS
-            console.log(layer)
-            layer.options.fillColor = "blue";
-            layer.options.color = "blue";
-            layer.options.style = {};
+
+            //changing colour the line below changes the colour of the country
+            //context of this function needs to be changed - colour of country she be difference for each day/ should be updated via data pulled from the api
+            //currently changes colour when country is clicked
+            layer.setStyle({fillColor: 'rgb(50,50,50)'});
+
         });
 
     }
