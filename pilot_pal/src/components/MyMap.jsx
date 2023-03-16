@@ -71,7 +71,8 @@ class MyMap extends Component {
             var y = point.geometry.coordinates[0]
 
             var data = weatherAPI(x,y)
-
+            
+            console.log(data)
 
             layer.bindPopup(portName);
         });
@@ -101,24 +102,22 @@ class MyMap extends Component {
 }
 
 async function weatherAPI(x,y){
-    const location = await fetch("http://api.openweathermap.org/geo/1.0/reverse?lat="+x+"&lon="+y+"&limit=1&appid=ec90bd9de7731df93b1303ecdd186b7d");
+    const location = await fetch("https://api.openweathermap.org/data/2.5/weather?lat="+x+"&lon="+y+"&appid=25e7a5bf30fbcedaba27b827613f0b08");
     var locationData = await location.json()
-    var locationArr = [locationData[0].name, locationData[0].country]
-
-    const weather = await fetch("http://api.openweathermap.org/data/2.5/weather?q="+locationArr[0]+","+locationArr[1]+"&APPID=25e7a5bf30fbcedaba27b827613f0b08")
-    var weatherData = await weather.json()
+    console.log(locationData)
     
     var weatherDataMap = {
-        "weatherDesc": weatherData.weather[0].description,
-        "temp": weatherData.main.temp,
-        "pressure": weatherData.main.pressure,
-        "humidity": weatherData.main.humidity,
-        "visibility": weatherData.visibility,
-        "windSpeed": weatherData.wind.speed,
-        "windDeg": weatherData.wind.deg,
+        "weatherDesc": locationData.weather[0].description,
+        "temp": locationData.main.temp,
+        "pressure": locationData.main.pressure,
+        "humidity": locationData.main.humidity,
+        "visibility": locationData.visibility,
+        "windSpeed": locationData.wind.speed,
+        "windDeg": locationData.wind.deg,
     }
 
-    console.log(weatherDataMap.weatherDesc);
+    console.log(weatherDataMap.weatherDesc)
+
     return weatherDataMap
 }
  
