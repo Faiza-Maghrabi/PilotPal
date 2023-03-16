@@ -60,10 +60,22 @@ class MyMap extends Component {
         //this part should be used when the user clicks on a point 
         //place holder code gives popup with port name
         //some airports have no name for name_en etc and some are fully in different alphabets
-        var portName = point.properties.name
+        var portName = point.properties.name_en
+        if(portName == null){
+            portName = point.properties.name
+        }
 
+        layer.addEventListener('click', function(e){
+            
+            var x = point.geometry.coordinates[1]
+            var y = point.geometry.coordinates[0]
+
+            var data = weatherAPI(x,y)
+
+
+            layer.bindPopup(portName);
+        });
         //console.log(layer)
-        layer.bindPopup(portName);
     }
 
     //RENDERING MAP USING GEOJSON AND MAP COMPONENT
@@ -86,6 +98,28 @@ class MyMap extends Component {
             </div>
         ); 
     }
-} 
+}
+
+async function weatherAPI(x,y){
+    const location = await fetch("http://api.openweathermap.org/geo/1.0/reverse?lat="+x+"&lon="+y+"&limit=1&appid=ec90bd9de7731df93b1303ecdd186b7d");
+    var locationData = await location.json()
+    var locationArr = [locationData[0].name, locationData[0].country]
+
+    const weather = await fetch("http://api.openweathermap.org/data/2.5/weather?q="+locationArr[0]+","+locationArr[1]+"&APPID=25e7a5bf30fbcedaba27b827613f0b08")
+    var weatherData = await weather.json()
+    
+    var weatherDataMap = {
+        "weatherDesc": weatherData.weather[0].description,
+        "temp": weatherData.main.temp,
+        "pressure": weatherData.main.pressure,
+        "humidity": weatherData.main.humidity,
+        "visibility": weatherData.visibility,
+        "windSpeed": weatherData.wind.speed,
+        "windDeg": weatherData.wind.deg,
+    }
+
+    console.log(weatherDataMap.weatherDesc);
+    return weatherDataMap
+}
  
 export default MyMap;
