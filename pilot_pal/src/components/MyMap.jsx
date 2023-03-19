@@ -11,7 +11,7 @@ var tempColor01 = 'rgb(212, 21, 21)'; //red
 var tempColor02 = 'rgb(21, 212, 31)'; //green
 var tempColor03 = 'rgb(21, 53, 212)'; //blue
 var countryColor;
-import './popUp.css';
+
 
 class MyMap extends Component {
   state = {};
