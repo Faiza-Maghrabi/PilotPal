@@ -7,6 +7,7 @@ import L from 'leaflet';
 
 import 'leaflet/dist/leaflet.css';
 import './MyMap.css';
+import './popUp.css';
 
 class MyMap extends Component {
   state = {};
@@ -70,7 +71,7 @@ class MyMap extends Component {
 
       //   layer.bindPopup(portName);
       layer.bindPopup(`
-      <div>
+      <div class = "popUp">
 
 
       <p> ${portName} </p> 

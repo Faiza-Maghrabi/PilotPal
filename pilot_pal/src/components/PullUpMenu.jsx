@@ -11,9 +11,11 @@ function PullUpMenu() {
 
   return (
     <Dropdown show={isOpen} autoClose="outside" onToggle={toggle}>
-      <Dropdown.Toggle as={Button} variant="Secondary" id="Dropdown">
-        Menu
-      </Dropdown.Toggle>
+      <Dropdown.Toggle
+        as={Button}
+        variant="Secondary"
+        id="Dropdown"
+      ></Dropdown.Toggle>
       <Dropdown.Menu style={{ color: 'light blue' }}>
         <Dropdown.Item>Option 1</Dropdown.Item>
         <Dropdown.Item>Option 2</Dropdown.Item>

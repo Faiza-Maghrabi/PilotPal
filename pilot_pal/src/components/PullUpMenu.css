@@ -2,13 +2,19 @@
     background-color:rgb(30, 82, 204);
     border: none;
     color: white;
-    padding: 15px 100px; 
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    position: relative;
+    position: fixed;
     font-size: 16px;
     overflow: hidden;
+    left: 6%;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    top: 90%;
+
 }
   
   .dropdown-item {
@@ -21,3 +27,7 @@
     overflow: hidden;
     padding: 10px 90px;
 }
+
+
+
+
