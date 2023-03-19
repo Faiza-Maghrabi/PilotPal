@@ -7,6 +7,10 @@ import L from 'leaflet';
 
 import 'leaflet/dist/leaflet.css';
 import './MyMap.css';
+var tempColor01 = 'rgb(212, 21, 21)'; //red
+var tempColor02 = 'rgb(21, 212, 31)'; //green
+var tempColor03 = 'rgb(21, 53, 212)'; //blue
+var countryColor;
 import './popUp.css';
 
 class MyMap extends Component {
@@ -36,7 +40,7 @@ class MyMap extends Component {
       //changing colour the line below changes the colour of the country
       //context of this function needs to be changed - colour of country she be difference for each day/ should be updated via data pulled from the api
       //currently changes colour when country is clicked
-      layer.setStyle({ fillColor: 'rgb(50,50,50)' });
+      layer.setStyle({ fillColor: countryColor });
     });
   };
 
@@ -135,6 +139,18 @@ async function weatherAPI(x, y) {
     windSpeed: locationData.wind.speed,
     windDeg: locationData.wind.deg,
   };
+
+  var tempColor = locationData.main.temp;
+
+  if (tempColor >= 30) {
+    countryColor = tempColor01;
+  } else if (tempColor < 30 && tempColor > 17) {
+    countryColor = tempColor02;
+  } else if (tempColor <= 17) {
+    countryColor = tempColor03;
+  }
+
+  console.log(weatherDataMap.weatherDesc);
 
   console.log(weatherDataMap.weatherDesc);
 
