@@ -103,6 +103,9 @@ class MyMap extends Component {
     return (
       <div>
         <h1 style={{ textAlign: 'center' }}>Header bar</h1>
+
+        <input type="text" id="flightSearchBar" onkeyup="flightSearch()" placeholder="Search for flights..."></input>
+
         <div id="map"></div>
 
         <MapContainer style={{ height: '80vh' }} center={[50, 0]} zoom={5}>
