@@ -46,6 +46,31 @@ class MyMap extends Component {
       //changing colour the line below changes the colour of the country
       //context of this function needs to be changed - colour of country she be difference for each day/ should be updated via data pulled from the api
       //currently changes colour when country is clicked
+      var countryColor;
+      if (temp >= 40){
+        countryColor = 'rgb(212, 21, 21)'; //red
+      }
+      else if (temp < 40 && temp >= 30){
+        countryColor = 'rgb(245, 118, 34)'; //orange
+      }
+      else if (temp < 30 && temp >= 20){
+        countryColor = 'rgb(227, 227, 95)'; //yellow
+      }
+      else if (temp < 20 && temp >= 10){
+          countryColor = 'rgb(0,255,127)'; //green
+      }
+      else if (temp < 10 && temp >= 0){
+        countryColor = 'rgb(9, 194, 227)'; //light blue
+      }
+      else if (temp < 0 && temp >= -20){
+        countryColor = 'rgb(18, 139, 252)'; //blue
+      }
+      else if (temp < -20 && temp >= 40){
+        countryColor = 'rgb(18, 112, 252)'; //dark blue
+      }
+      else if (temp < -40){
+          countryColor = 'rgb(18, 45, 252)';//super dark blue
+      }
       layer.setStyle({ fillColor: countryColor });
     });
   };
