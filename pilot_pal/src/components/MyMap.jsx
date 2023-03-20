@@ -31,12 +31,17 @@ class MyMap extends Component {
 
   //pop ups when clicking on each country
   //TO DO: change to onEachAirport to give weather
-  onEachCountry = (country, layer) => {
-    //const countryName = country.properties.ADMIN;
+  onEachCountry = (country, layer,countryID) => {
 
     //layer represents the drawing of the country that we see on the screen
     //layer.bindPopup(countryName);
     layer.addEventListener('click', function (e) {
+      //when country is clicked, collects the country name and countrycode
+      var countryName = country.properties.ADMIN
+      var countryCode = country.properties.ISO_A3
+      
+      //called and returns temperature of the country clicked.
+      var temp = countryColour(countryName,countryCode)
       //changing colour the line below changes the colour of the country
       //context of this function needs to be changed - colour of country she be difference for each day/ should be updated via data pulled from the api
       //currently changes colour when country is clicked
@@ -140,21 +145,40 @@ async function weatherAPI(x, y) {
     windDeg: locationData.wind.deg,
   };
 
-  var tempColor = locationData.main.temp;
+  // var tempColor = locationData.main.temp;
 
-  if (tempColor >= 30) {
-    countryColor = tempColor01;
-  } else if (tempColor < 30 && tempColor > 17) {
-    countryColor = tempColor02;
-  } else if (tempColor <= 17) {
-    countryColor = tempColor03;
-  }
+  // if (tempColor >= 30) {
+  //   countryColor = tempColor01;
+  // } else if (tempColor < 30 && tempColor > 17) {
+  //   countryColor = tempColor02;
+  // } else if (tempColor <= 17) {
+  //   countryColor = tempColor03;
+  // }
 
-  console.log(weatherDataMap.weatherDesc);
+  // console.log(weatherDataMap.weatherDesc);
 
-  console.log(weatherDataMap.weatherDesc);
+  // console.log(weatherDataMap.weatherDesc);
 
   return weatherDataMap;
+}
+
+//gets capital city of the country clicked and returns their temperature
+async function countryColour(countryName, countryCode){
+  var cities = require('./../data/country-by-capital-city.json');
+
+  var capitalCity = ""
+  for (let i = 0; i < cities.length; i++) { 
+    if(cities[i].country == countryName){
+      capitalCity = cities[i].city
+    }
+  }
+  
+  const location = await fetch(
+    'https://api.openweathermap.org/data/2.5/weather?q='+capitalCity+","+countryCode+"&units=metric&appid=25e7a5bf30fbcedaba27b827613f0b08"
+  );
+  var locationData = await location.json();
+  console.log(locationData.main.temp, capitalCity)
+  return locationData.main.temp
 }
 
 export default MyMap;
