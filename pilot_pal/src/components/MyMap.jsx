@@ -7,11 +7,12 @@ import L from 'leaflet';
 
 import 'leaflet/dist/leaflet.css';
 import './MyMap.css';
+import './popUp.css';
+
 var tempColor01 = 'rgb(212, 21, 21)'; //red
 var tempColor02 = 'rgb(21, 212, 31)'; //green
 var tempColor03 = 'rgb(21, 53, 212)'; //blue
 var countryColor;
-
 
 class MyMap extends Component {
   state = {};
@@ -31,18 +32,17 @@ class MyMap extends Component {
 
   //pop ups when clicking on each country
   //TO DO: change to onEachAirport to give weather
-  onEachCountry = (country, layer,countryID) => {
-
+  onEachCountry = (country, layer, countryID) => {
     //layer represents the drawing of the country that we see on the screen
     //layer.bindPopup(countryName);
     layer.addEventListener('click', async function (e) {
       //when country is clicked, collects the country name and countrycode
-      var countryName = country.properties.ADMIN
-      var countryCode = country.properties.ISO_A3
-      
+      var countryName = country.properties.ADMIN;
+      var countryCode = country.properties.ISO_A3;
+
       //called and returns temperature of the country clicked.
-      var temp = await countryColour(countryName,countryCode)
-      console.log(temp)
+      var temp = await countryColour(countryName, countryCode);
+      console.log(temp);
       //changing colour the line below changes the colour of the country
       //context of this function needs to be changed - colour of country she be difference for each day/ should be updated via data pulled from the api
       //currently changes colour when country is clicked
@@ -81,16 +81,16 @@ class MyMap extends Component {
 
       //   layer.bindPopup(portName);
       layer.bindPopup(`
-      <div class = "popUp">
+      <div class= "popUp">
 
 
-      <p> ${portName} </p> 
-      <p> temp: ${data.temp} °C</p> 
-      <p> pressure: ${data.pressure} KPa</p> 
-      <p> humidity: ${data.humidity} %</p> 
-      <p> visibility: ${data.visibility} m</p> 
-      <p> windSpeed: ${data.windSpeed} m/s</p> 
-      <p> windDeg: ${data.windDeg} °</p> 
+      <p class= 'name'> ${portName} </p> 
+      <p> Temp: ${data.temp} °C</p> 
+      <p> Pressure: ${data.pressure} KPa</p> 
+      <p> Humidity: ${data.humidity} %</p> 
+      <p> Visibility: ${data.visibility} m</p> 
+      <p> WindSpeed: ${data.windSpeed} m/s</p> 
+      <p> WindDeg: ${data.windDeg} °</p> 
 
 
       </div>
@@ -103,9 +103,14 @@ class MyMap extends Component {
   render() {
     return (
       <div>
-        <h1 style={{ textAlign: 'center' }}>Header bar</h1>
+        <h1 style={{ textAlign: 'center' }}></h1>
 
-        <input type="text" id="flightSearchBar" onkeyup="flightSearch()" placeholder="Search for flights..."></input>
+        <input
+          type="text"
+          id="flightSearchBar"
+          onkeyup="flightSearch()"
+          placeholder="Search for flights..."
+        ></input>
 
         <div id="map"></div>
 
@@ -121,7 +126,7 @@ class MyMap extends Component {
             onEachFeature={this.onEachPoint}
           ></GeoJSON>
         </MapContainer>
-        <h1 style={{ textAlign: 'center' }}>Nav Bar</h1>
+        <h1 style={{ textAlign: 'center' }}></h1>
       </div>
     );
   }
@@ -153,21 +158,25 @@ async function weatherAPI(x, y) {
 }
 
 //gets capital city of the country clicked and returns their temperature
-async function countryColour(countryName, countryCode){
+async function countryColour(countryName, countryCode) {
   var cities = require('./../data/country-by-capital-city.json');
 
-  var capitalCity = ""
-  for (let i = 0; i < cities.length; i++) { 
-    if(cities[i].country == countryName){
-      capitalCity = cities[i].city
+  var capitalCity = '';
+  for (let i = 0; i < cities.length; i++) {
+    if (cities[i].country == countryName) {
+      capitalCity = cities[i].city;
     }
   }
-  
+
   const location = await fetch(
-    'https://api.openweathermap.org/data/2.5/weather?q='+capitalCity+","+countryCode+"&units=metric&appid=25e7a5bf30fbcedaba27b827613f0b08"
+    'https://api.openweathermap.org/data/2.5/weather?q=' +
+      capitalCity +
+      ',' +
+      countryCode +
+      '&units=metric&appid=25e7a5bf30fbcedaba27b827613f0b08'
   );
   var locationData = await location.json();
-  return locationData.main.temp
+  return locationData.main.temp;
 }
 
 export default MyMap;

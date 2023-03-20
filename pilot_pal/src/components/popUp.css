@@ -1,3 +1,20 @@
 .popUp {
-    
+    background-color: rgb(248, 203, 144);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    width: 150px;
+    position: relative;
+    left: -10px;
+
+}
+
+p.name {
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+}
+
+p {
+    text-align: center;
 }
