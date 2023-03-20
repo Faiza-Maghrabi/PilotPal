@@ -2,3 +2,13 @@
 .leaflet-container {
     background-color: rgb(189, 230, 243);
 }
+
+#flightSearchBar {
+    background-image: url('/public/plane_icon.png');
+    background-repeat: no-repeat;
+    background-position: 12px 8px;
+    font-size: 18px;
+    padding: 15px 20px 12px 55px;
+    width: 100%;
+    border: 2px solid rgb(208, 208, 208);
+}
