@@ -8,18 +8,31 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './MyMap.css';
 import './popUp.css';
+import WeatherBox from './WeatherBox';
 
-var tempColor01 = 'rgb(212, 21, 21)'; //red
-var tempColor02 = 'rgb(21, 212, 31)'; //green
-var tempColor03 = 'rgb(21, 53, 212)'; //blue
-var countryColor;
 
 class MyMap extends Component {
-  state = {};
-
-  componentDidMount() {
-    console.log(airports);
+  constructor(props){
+    super(props);
+    this.state = {
+      showBox: false,
+      portName: "",
+      temp: "",
+      pressure: "",
+      humidity: "",
+      visibility: "",
+      windspeed: "",
+      windDeg: "",
+    }
   }
+
+  resetShowBox = () => {
+    this.setState({showBox: false})
+  }
+
+  // componentDidMount() {
+  //   console.log(airports);
+  // }
 
   countryStyle = {
     //rgb(129, 235, 180)'
@@ -87,6 +100,7 @@ class MyMap extends Component {
     });
   };
 
+
   onEachPoint = (point, layer) => {
     //this part should be used when the user clicks on a point
     //place holder code gives popup with port name
@@ -96,33 +110,65 @@ class MyMap extends Component {
       portName = point.properties.name;
     }
 
-    layer.addEventListener('click', async function (e) {
-      var x = point.geometry.coordinates[1];
-      var y = point.geometry.coordinates[0];
+    layer.on({
+      click: async (e) => {
+        var x = point.geometry.coordinates[1];
+        var y = point.geometry.coordinates[0];
 
-      var data = await weatherAPI(x, y);
+        var data = await weatherAPI(x, y);
 
-      console.log(data);
-
-      //   layer.bindPopup(portName);
-      layer.bindPopup(`
-      <div class= "popUp">
-
-
-      <p class= 'name'> ${portName} </p> 
-      <p> Temp: ${data.temp} °C</p> 
-      <p> Pressure: ${data.pressure} KPa</p> 
-      <p> Humidity: ${data.humidity} %</p> 
-      <p> Visibility: ${data.visibility} m</p> 
-      <p> WindSpeed: ${data.windSpeed} m/s</p> 
-      <p> WindDeg: ${data.windDeg} °</p> 
-
-
-      </div>
-      `);
+        // console.log(data);
+        // console.log(this.state.showBox)
+        this.setState({showBox: true, portName: portName, temp: data.temp, pressure: data.pressure, humidity: data.humidity, visibility: data.visibility, windspeed: data.windSpeed, windDeg: data.windDeg})
+      }
     });
+
+    // temp: "",
+    //   pressure: "",
+    //   humidity: "",
+    //   visibility: "",
+    //   windspeed: "",
+    //   windDeg: "",
+
+    // AirportClickEvent = async (e) => {
+    //   var x = point.geometry.coordinates[1];
+    //   var y = point.geometry.coordinates[0];
+
+    //   var data = await weatherAPI(x, y);
+
+    //   console.log(data);
+    // };
+
+    // layer.addEventListener('click', async function (e) {
+    //   var x = point.geometry.coordinates[1];
+    //   var y = point.geometry.coordinates[0];
+
+    //   var data = await weatherAPI(x, y);
+
+    //   console.log(data);
+    //   this.Box("aa")
+
+    //   //   layer.bindPopup(portName);
+    //   layer.bindPopup(`
+    //   <div class= "popUp">
+
+
+    //   <p class= 'name'> ${portName} </p> 
+    //   <p> Temp: ${data.temp} °C</p> 
+    //   <p> Pressure: ${data.pressure} KPa</p> 
+    //   <p> Humidity: ${data.humidity} %</p> 
+    //   <p> Visibility: ${data.visibility} m</p> 
+    //   <p> WindSpeed: ${data.windSpeed} m/s</p> 
+    //   <p> WindDeg: ${data.windDeg} °</p> 
+
+
+    //   </div>
+    //   `);
+    // });
     //console.log(layer)
   };
+
+
 
   //RENDERING MAP USING GEOJSON AND MAP COMPONENT
   render() {
@@ -137,7 +183,16 @@ class MyMap extends Component {
           placeholder="Search for flights..."
         ></input>
 
-        <div id="map"></div>
+        <WeatherBox 
+          show={this.state.showBox} 
+          name={this.state.portName} 
+          temp={this.state.temp} 
+          pressure={this.state.pressure}
+          visibility={this.state.visibility}
+          windspeed={this.state.windspeed}
+          windDeg={this.state.windDeg}
+          reset = {this.resetShowBox}
+        />
 
         <MapContainer style={{ height: '80vh' }} center={[50, 0]} zoom={5}>
           <GeoJSON
@@ -164,7 +219,7 @@ async function weatherAPI(x, y) {
       '&lon=' +
       y +
       '&units=metric' +
-      '&appid=25e7a5bf30fbcedaba27b827613f0b08'
+      '&appid=ec90bd9de7731df93b1303ecdd186b7d'
   );
   var locationData = await location.json();
   //   console.log(locationData);
@@ -198,7 +253,7 @@ async function countryColour(countryName, countryCode) {
       capitalCity +
       ',' +
       countryCode +
-      '&units=metric&appid=25e7a5bf30fbcedaba27b827613f0b08'
+      '&units=metric&appid=ec90bd9de7731df93b1303ecdd186b7d'
   );
   var locationData = await location.json();
   return locationData.main.temp;
