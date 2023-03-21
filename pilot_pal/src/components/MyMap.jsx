@@ -16,6 +16,7 @@ class MyMap extends Component {
     super(props);
     this.state = {
       showBox: false,
+      weatherdesc: "",
       portName: "",
       temp: "",
       pressure: "",
@@ -55,10 +56,8 @@ class MyMap extends Component {
 
       //called and returns temperature of the country clicked.
       var temp = await countryColour(countryName, countryCode);
-      console.log(temp);
       //changing colour the line below changes the colour of the country
-      //context of this function needs to be changed - colour of country she be difference for each day/ should be updated via data pulled from the api
-      //currently changes colour when country is clicked
+
       var countryColor;
       if (temp >= 40){
         countryColor = 'rgb(212, 21, 21)'; //red
@@ -94,7 +93,7 @@ class MyMap extends Component {
     var y = latlng.geometry.coordinates[0];
     return L.circleMarker([x, y], {
       fillColor: '#000000',
-      radius: 3,
+      radius: 2,
       weight: 5,
       color: '#000000',
     });
@@ -110,18 +109,35 @@ class MyMap extends Component {
       portName = point.properties.name;
     }
 
+    // var radval = 3;
+    // if (layer.map.zoom < 5){radval = layer.map.zoom - 2}
+
+    // layer.setStyle({
+    //   radius: radval
+    // });
+
     layer.on({
       click: async (e) => {
         var x = point.geometry.coordinates[1];
         var y = point.geometry.coordinates[0];
 
         var data = await weatherAPI(x, y);
-
-        // console.log(data);
         // console.log(this.state.showBox)
-        this.setState({showBox: true, portName: portName, temp: data.temp, pressure: data.pressure, humidity: data.humidity, visibility: data.visibility, windspeed: data.windSpeed, windDeg: data.windDeg})
+        this.setState({showBox: true, weatherdesc: data.weatherDesc, portName: portName, temp: data.temp, pressure: data.pressure, humidity: data.humidity, visibility: data.visibility, windspeed: data.windSpeed, windDeg: data.windDeg})
+      },
+      mouseover: () => {
+        layer.setStyle({
+          color: 'red'
+        });
+      },
+      mouseout: () => {
+        layer.setStyle({
+          color: 'black'
+        });
       }
+      
     });
+
 
     // temp: "",
     //   pressure: "",
@@ -185,9 +201,11 @@ class MyMap extends Component {
 
         <WeatherBox 
           show={this.state.showBox} 
+          weatherDesc={this.state.weatherdesc}
           name={this.state.portName} 
           temp={this.state.temp} 
           pressure={this.state.pressure}
+          humidity={this.state.humidity}
           visibility={this.state.visibility}
           windspeed={this.state.windspeed}
           windDeg={this.state.windDeg}
@@ -222,7 +240,7 @@ async function weatherAPI(x, y) {
       '&appid=ec90bd9de7731df93b1303ecdd186b7d'
   );
   var locationData = await location.json();
-  //   console.log(locationData);
+  // console.log(locationData);
 
   var weatherDataMap = {
     weatherDesc: locationData.weather[0].description,

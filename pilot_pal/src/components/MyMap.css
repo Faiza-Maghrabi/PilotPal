@@ -12,3 +12,20 @@
     width: 100%;
     border: 2px solid rgb(208, 208, 208);
 }
+
+p{
+    margin: 3px;
+    font-size: 15px;
+
+}
+
+#in{
+    background-color: white;
+    opacity: 0.95;
+    padding: 10px;
+}
+
+#x{
+    margin-left: 90%;
+    font-size: 10px;
+}
