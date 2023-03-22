@@ -121,7 +121,9 @@ class MyMap extends Component {
         var x = point.geometry.coordinates[1];
         var y = point.geometry.coordinates[0];
 
-        var data = await weatherAPI(x, y);
+        var [data,dataLater] = await weatherAPI(x, y);
+        console.log("dataLater: ", dataLater)
+        console.log("data now:", data)
         // console.log(this.state.showBox)
         this.setState({showBox: true, weatherdesc: data.weatherDesc, portName: portName, temp: data.temp, pressure: data.pressure, humidity: data.humidity, visibility: data.visibility, windspeed: data.windSpeed, windDeg: data.windDeg})
       },
@@ -252,7 +254,24 @@ async function weatherAPI(x, y) {
     windDeg: locationData.wind.deg,
   };
 
-  return weatherDataMap;
+  //next couple of days
+
+  const nextDays = await fetch(
+    'http://api.openweathermap.org/data/2.5/forecast?lat='+x+'&lon='+y+'&units=metric&appid=25e7a5bf30fbcedaba27b827613f0b08'
+  );
+
+  var threeDays = await nextDays.json();
+  var nextFewDays = {
+    tomorrow : [threeDays.list[12].main.temp,threeDays.list[12].main.pressure,threeDays.list[12].main.humidity,threeDays.list[12].visibility,threeDays.list[12].wind.speed,threeDays.list[12].wind.deg],
+    tomorrow2 : [threeDays.list[20].main.temp,threeDays.list[20].main.pressure,threeDays.list[20].main.humidity,threeDays.list[20].visibility,threeDays.list[20].wind.speed,threeDays.list[20].wind.deg],
+    tomorrow3 : [threeDays.list[28].main.temp, threeDays.list[28].main.pressure, threeDays.list[28].main.humidity, threeDays.list[28].visibility, threeDays.list[28].wind.speed, threeDays.list[28].wind.deg]
+  }
+  // console.log("tomorrow: ",threeDays.list[12]);
+  // console.log("day after tomorrow: ",threeDays.list[20]);
+  // console.log("day after day after tomorrow: ",threeDays.list[28]);
+  // console.log(nextFewDays)
+
+  return [weatherDataMap, nextFewDays]
 }
 
 //gets capital city of the country clicked and returns their temperature
