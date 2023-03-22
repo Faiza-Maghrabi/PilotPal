@@ -262,11 +262,11 @@ async function weatherAPI(x, y) {
 
   var threeDays = await nextDays.json();
   var nextFewDays = {
-    tomorrow : [threeDays.list[12].main.temp,threeDays.list[12].main.pressure,threeDays.list[12].main.humidity,threeDays.list[12].visibility,threeDays.list[12].wind.speed,threeDays.list[12].wind.deg],
-    tomorrow2 : [threeDays.list[20].main.temp,threeDays.list[20].main.pressure,threeDays.list[20].main.humidity,threeDays.list[20].visibility,threeDays.list[20].wind.speed,threeDays.list[20].wind.deg],
-    tomorrow3 : [threeDays.list[28].main.temp, threeDays.list[28].main.pressure, threeDays.list[28].main.humidity, threeDays.list[28].visibility, threeDays.list[28].wind.speed, threeDays.list[28].wind.deg]
+    tomorrow : [threeDays.list[12].dt_txt, threeDays.list[12].main.temp,threeDays.list[12].main.pressure,threeDays.list[12].main.humidity,threeDays.list[12].visibility,threeDays.list[12].wind.speed,threeDays.list[12].wind.deg],
+    tomorrow2 : [threeDays.list[20].dt_txt, threeDays.list[20].main.temp,threeDays.list[20].main.pressure,threeDays.list[20].main.humidity,threeDays.list[20].visibility,threeDays.list[20].wind.speed,threeDays.list[20].wind.deg],
+    tomorrow3 : [threeDays.list[28].dt_txt, threeDays.list[28].main.temp, threeDays.list[28].main.pressure, threeDays.list[28].main.humidity, threeDays.list[28].visibility, threeDays.list[28].wind.speed, threeDays.list[28].wind.deg]
   }
-  // console.log("tomorrow: ",threeDays.list[12]);
+  //console.log("tomorrow: ",threeDays.list[12]);
   // console.log("day after tomorrow: ",threeDays.list[20]);
   // console.log("day after day after tomorrow: ",threeDays.list[28]);
   // console.log(nextFewDays)
