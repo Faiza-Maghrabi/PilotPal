@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Dropdown } from 'react-bootstrap';
 import './PullUpMenu.css';
 
-function PullUpMenu() {
+function PullUpMenu({ onOptionClick }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => {
@@ -17,9 +17,27 @@ function PullUpMenu() {
         id="Dropdown"
       ></Dropdown.Toggle>
       <Dropdown.Menu style={{ color: 'light blue' }}>
-        <Dropdown.Item>Option 1</Dropdown.Item>
-        <Dropdown.Item>Option 2</Dropdown.Item>
-        <Dropdown.Item>Option 3</Dropdown.Item>
+        <Dropdown.Item
+          onClick={() => {
+            onOptionClick(0);
+          }}
+        >
+          Current Weather
+        </Dropdown.Item>
+        <Dropdown.Item
+          onClick={() => {
+            onOptionClick(1);
+          }}
+        >
+          Tomorrow
+        </Dropdown.Item>
+        <Dropdown.Item
+          onClick={() => {
+            onOptionClick(2);
+          }}
+        >
+          Day after Tomorrow
+        </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );
