@@ -7,7 +7,7 @@ class FlightSearch extends Component{
         super(props);
         this.state = {
             flights: [],
-            userInput: ''
+            userICAO: 'LNI57'
         }
     }
     // searchSubmitted(event) {
@@ -30,11 +30,13 @@ class FlightSearch extends Component{
 
       getFlightData = () => {
           //api call only needs to occur once
-          fetch('http://api.aviationstack.com/v1/flights?access_key=19af92ce01f489a1a4c60b022a1eb4cb&flight_icao=LNI57').then(res => res.json()).then((result) => {
-            for (let i = 0; i < result.data.length; i++) {
-                this.setState({flights: this.state.flights.push(result.data[i])})
+          fetch('http://api.aviationstack.com/v1/flights?access_key=19af92ce01f489a1a4c60b022a1eb4cb&flight_icao='+ this.state.userICAO +'').then(res => res.json()).then((result) => {
+              console.log(result.data)
+              this.setState({flights: result.data})
+            // for (let i = 0; i < result.data.length; i++) {
+            //     this.setState({flights: this.state.flights.push(result.data[i])})
 
-            }
+            // }
             }).catch()
       }
       
