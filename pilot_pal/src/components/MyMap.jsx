@@ -10,23 +10,9 @@ import './MyMap.css';
 import './popUp.css';
 import PullUpMenu from './PullUpMenu';
 import WeatherBox from './WeatherBox';
+import FlightSearch from './FlightSearch';
 
 
-function searchSubmitted(event) {
-  console.log("Search has been submitted");
-  let q = document.getElementById("flightSearchInput")
-  flightSearch(q);
-}
-
-function flightSearch(iata) {
-
-  let params = new URLSearchParams({
-    access_key: "19af92ce01f489a1a4c60b022a1eb4cb",
-    flight_iata: iata
-  })
-
-  fetch(`http://api.aviationstack.com/v1/flights?${params}`).then(res => res.json()).then(console.log).catch()
-};
 
 class MyMap extends Component {
   //defining states to communicate with WeatherBox
@@ -207,11 +193,11 @@ class MyMap extends Component {
   render() {
     return (
       <div>
-
+{/* 
         <form id="flightSearchForm" action="#" onSubmit={searchSubmitted}>
           <input type="search" id="flightSearchInput" name="flightSearchInput" placeholder="Search for flight number..."></input>
           <button type="submit" id="flightSearchButton"> Search</button>
-        </form>
+        </form> */}
 
         {/* <script>
           const f = document.getElementById("flightSearchForm");
@@ -220,6 +206,8 @@ class MyMap extends Component {
         </script> */}
 
        {/* <input type="text" id="flightSearchBar" onKeyUp={flightSearch()} placeholder="Search for flights..."></input> */}
+
+        <FlightSearch />
 
         <WeatherBox
           show={this.state.showBox}
