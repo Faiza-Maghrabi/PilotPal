@@ -15,13 +15,32 @@
 
 p{
     margin: 3px;
-    font-size: 15px;
+    font-size: 16px;
+
+}
+
+#out{
+
+    width: 70%;
+    max-width: 100%;
+    position: fixed;
+    left: 50%;
+    top: 25%;
+    z-index: 500;
+    transform: translate(-50%,-50%);
+
+    padding: 20px 20px 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid #000000;
 
 }
 
 #in{
     background-color: white;
-    opacity: 0.95;
+    opacity: 0.9;
     padding: 10px;
 }
 
@@ -29,3 +48,59 @@ p{
     margin-left: 90%;
     font-size: 10px;
 }
+
+.clear_sky{
+    background-image: url('./../img/clear-sky.jpg');
+}
+
+.broken_clouds{
+    background-image: url('./../img/broken-clouds.jpg');
+}
+
+.few_clouds{
+    background-image: url('./../img/few-clouds.jpg');
+}
+
+.mist{
+    background-image: url('./../img/mist.jpg');
+}
+
+.rain{
+    background-image: url('./../img/rain.jpg');
+}
+
+.scattered_clouds{
+    background-image: url('./../img/scattered-clouds.jpg');
+}
+
+.shower_rain{
+    background-image: url('./../img/shower-rain.jpg');
+}   
+
+.snow{
+    background-image: url('./../img/snow.jpg');
+}
+
+.thunderstorm{
+    background-image: url('./../img/thunderstorm.jpg');
+}
+
+.overcast_clouds{
+    background-image: url('./../img/overcast-clouds.jpg');
+}
+
+.light_rain{
+    background-image: url('./../img/light-rain.jpg');
+}   
+
+.light_snow{
+    background-image: url('./../img/light-snow.jpg');
+}
+
+.fog{
+    background-image: url('./../img/fog.jpg');
+}
+
+.moderate_rain{
+    background-image: url('./../img/moderate-rain.jpg');
+}   

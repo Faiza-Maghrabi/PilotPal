@@ -12,6 +12,7 @@ import PullUpMenu from './PullUpMenu';
 import WeatherBox from './WeatherBox';
 
 class MyMap extends Component {
+  //defining states to communicate with WeatherBox
   constructor(props) {
     super(props);
     this.state = {
@@ -29,46 +30,48 @@ class MyMap extends Component {
     };
   }
 
+  //method to hide Weather
   resetShowBox = () => {
     this.setState({ showBox: false });
   };
 
+  //initial styling for the countries in the country geojson
   countryStyle = {
-    //rgb(129, 235, 180)'
-
     fillColor: 'rgb(129, 235, 180)',
     fillOpacity: 1,
     color: 'rgb(41, 153, 95)',
     weight: 1,
   };
 
+  //function used for pullUpMenu, retreives the correct weather data for the date selected
   handleOptionClick = (option) => {
-    if (option === 0) {
-      this.setState((prevState) => ({
-        temp: prevState.currentWeather.temp,
-        pressure: prevState.currentWeather.pressure,
-        humidity: prevState.currentWeather.humidity,
-        visibility: prevState.currentWeather.visibility,
-        windspeed: prevState.currentWeather.windSpeed,
-        windDeg: prevState.currentWeather.windDeg,
-      }));
-    } else {
-      this.setState((prevState) => ({
-        temp: prevState.dailyWeather.temp[option - 1],
-        pressure: prevState.dailyWeather.pressure[option - 1],
-        humidity: prevState.dailyWeather.humidity[option - 1],
-        visibility: prevState.dailyWeather.visibility[option - 1],
-        windspeed: prevState.dailyWeather.wind[option - 1].speed,
-        windDeg: prevState.dailyWeather.wind[option - 1].deg,
-      }));
+    if (this.state.showBox === true) {
+      if (option === 0) {
+        this.setState((prevState) => ({
+          temp: prevState.currentWeather.temp,
+          pressure: prevState.currentWeather.pressure,
+          humidity: prevState.currentWeather.humidity,
+          visibility: prevState.currentWeather.visibility,
+          windspeed: prevState.currentWeather.windSpeed,
+          windDeg: prevState.currentWeather.windDeg,
+        }));
+      } else {
+        this.setState((prevState) => ({
+          temp: prevState.dailyWeather.temp[option - 1],
+          pressure: prevState.dailyWeather.pressure[option - 1],
+          humidity: prevState.dailyWeather.humidity[option - 1],
+          visibility: prevState.dailyWeather.visibility[option - 1],
+          windspeed: prevState.dailyWeather.wind[option - 1].speed,
+          windDeg: prevState.dailyWeather.wind[option - 1].deg,
+        }));
+      }
     }
   };
 
   //pop ups when clicking on each country
-  //TO DO: change to onEachAirport to give weather
-  onEachCountry = (country, layer, countryID) => {
+  onEachCountry = (country, layer) => {
     //layer represents the drawing of the country that we see on the screen
-    //layer.bindPopup(countryName);
+
     layer.addEventListener('click', async function (e) {
       //when country is clicked, collects the country name and countrycode
       var countryName = country.properties.ADMIN;
@@ -76,17 +79,17 @@ class MyMap extends Component {
 
       //called and returns temperature of the country clicked.
       var temp = await countryColour(countryName, countryCode);
-      //changing colour the line below changes the colour of the country
+      //using the temp to decide the colour of the country
 
       var countryColor;
       if (temp >= 40) {
         countryColor = 'rgb(212, 21, 21)'; //red
       } else if (temp < 40 && temp >= 30) {
-        countryColor = 'rgb(245, 118, 34)'; //orange
+        countryColor = 'rgb(235, 118, 34)'; //orange
       } else if (temp < 30 && temp >= 20) {
         countryColor = 'rgb(227, 227, 95)'; //yellow
       } else if (temp < 20 && temp >= 10) {
-        countryColor = 'rgb(0,255,127)'; //green
+        countryColor = 'rgb(0,230,127)'; //green
       } else if (temp < 10 && temp >= 0) {
         countryColor = 'rgb(9, 194, 227)'; //light blue
       } else if (temp < 0 && temp >= -20) {
@@ -112,10 +115,10 @@ class MyMap extends Component {
     });
   };
 
+  //method kept within every airport point
   onEachPoint = (point, layer) => {
-    //this part should be used when the user clicks on a point
-    //place holder code gives popup with port name
-    //some airports have no name for name_en etc and some are fully in different alphabets
+
+    //standardising airport names
     var portName = point.properties.name_en;
     if (portName == null) {
       portName = point.properties.name;
@@ -128,6 +131,7 @@ class MyMap extends Component {
     //   radius: radval
     // });
 
+    //click event for each point, retreives weather data and changes component states accordingly for the WeatherBox
     layer.on({
       click: async (e) => {
         var x = point.geometry.coordinates[1];
@@ -143,8 +147,8 @@ class MyMap extends Component {
           const { currentWeather, dailyWeather } = data;
           this.setState(
             (prevState) => {
-              console.log('currentWeather', currentWeather);
-              console.log('dailyWeather', dailyWeather);
+              // console.log('currentWeather', currentWeather);
+              // console.log('dailyWeather', dailyWeather);
               return {
                 ...prevState,
                 currentWeather: currentWeather,
@@ -161,7 +165,7 @@ class MyMap extends Component {
               };
             },
             () => {
-              console.log('Updated state:', this.state);
+              // console.log('Updated state:', this.state);
             }
           );
         });
@@ -181,10 +185,10 @@ class MyMap extends Component {
   };
 
   //RENDERING MAP USING GEOJSON AND MAP COMPONENT
+  //fight search bar, weatherbox, map container and pull up menu are all defined here for user interaction
   render() {
     return (
       <div>
-        <h1 style={{ textAlign: 'center' }}></h1>
 
         <input
           type="text"
@@ -206,7 +210,7 @@ class MyMap extends Component {
           reset={this.resetShowBox}
         />
 
-        <MapContainer style={{ height: '80vh' }} center={[50, 0]} zoom={5}>
+        <MapContainer style={{ height: '93vh' }} center={[50, 0]} zoom={5}>
           <GeoJSON
             style={this.countryStyle}
             data={countries.features}
@@ -218,13 +222,15 @@ class MyMap extends Component {
             onEachFeature={this.onEachPoint}
           ></GeoJSON>
         </MapContainer>
-        <h1 style={{ textAlign: 'center' }}></h1>
+
         <PullUpMenu onOptionClick={this.handleOptionClick} />
       </div>
     );
   }
 }
 
+//Method that uses the lat and long values to retreive weather data from an api
+//this includes the next couple of days alongside the current moment
 async function weatherAPI(x, y) {
   const location = await fetch(
     'https://api.openweathermap.org/data/2.5/weather?lat=' +
@@ -235,7 +241,7 @@ async function weatherAPI(x, y) {
       '&appid=ec90bd9de7731df93b1303ecdd186b7d'
   );
   var locationData = await location.json();
-  // console.log(locationData);
+   console.log(locationData);
 
   var weatherDataMap = {
     weatherDesc: locationData.weather[0].description,
@@ -304,7 +310,7 @@ async function weatherAPI(x, y) {
   return { currentWeather: weatherDataMap, dailyWeather: nextFewDays };
 }
 
-//gets capital city of the country clicked and returns their temperature
+//gets capital city of the country clicked and returns their temperature via api fetch request
 async function countryColour(countryName, countryCode) {
   var cities = require('./../data/country-by-capital-city.json');
 
