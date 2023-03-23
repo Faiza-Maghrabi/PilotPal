@@ -3,10 +3,38 @@
     background-color: rgb(189, 230, 243);
 }
 
+*{
+    box-sizing: border-box;
+}
+
+#flightSearchForm {
+    width: 100%;
+    height: 70px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+}
+
+#flightSearchInput {
+    background-color: #bde6f3;
+    font-size: 18px;
+    color: black;
+    height: 100%;
+    width: 100%;
+    padding: 10px 30px;
+}
+
+::placeholder{
+    color: black;
+    opacity: 0.7;
+
+}
+
 #flightSearchBar {
     background-image: url('/public/plane_icon.png');
     background-repeat: no-repeat;
-    background-position: 12px 11px;
+    background-position: 12px 14px;
     font-size: 18px;
     padding: 15px 20px 12px 55px;
     width: 100%;

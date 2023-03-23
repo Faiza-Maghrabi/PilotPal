@@ -11,6 +11,23 @@ import './popUp.css';
 import PullUpMenu from './PullUpMenu';
 import WeatherBox from './WeatherBox';
 
+
+function searchSubmitted(event) {
+  console.log("Search has been submitted");
+  let q = document.getElementById("flightSearchInput")
+  flightSearch(q);
+}
+
+function flightSearch(iata) {
+
+  let params = new URLSearchParams({
+    access_key: "19af92ce01f489a1a4c60b022a1eb4cb",
+    flight_iata: iata
+  })
+
+  fetch(`http://api.aviationstack.com/v1/flights?${params}`).then(res => res.json()).then(console.log).catch()
+};
+
 class MyMap extends Component {
   //defining states to communicate with WeatherBox
   constructor(props) {
@@ -67,6 +84,7 @@ class MyMap extends Component {
       }
     }
   };
+
 
   //pop ups when clicking on each country
   onEachCountry = (country, layer) => {
@@ -190,12 +208,18 @@ class MyMap extends Component {
     return (
       <div>
 
-        <input
-          type="text"
-          id="flightSearchBar"
-          onKeyup="flightSearch()"
-          placeholder="Search for flights..."
-        ></input>
+        <form id="flightSearchForm" action="#" onSubmit={searchSubmitted}>
+          <input type="search" id="flightSearchInput" name="flightSearchInput" placeholder="Search for flight number..."></input>
+          <button type="submit" id="flightSearchButton"> Search</button>
+        </form>
+
+        {/* <script>
+          const f = document.getElementById("flightSearchForm");
+          f.addEventListener("submit", searchSubmitted)
+          event.preventDefault()
+        </script> */}
+
+       {/* <input type="text" id="flightSearchBar" onKeyUp={flightSearch()} placeholder="Search for flights..."></input> */}
 
         <WeatherBox
           show={this.state.showBox}
