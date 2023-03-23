@@ -10,29 +10,14 @@ class FlightSearch extends Component{
             userICAO: 'LNI57'
         }
     }
-    // searchSubmitted(event) {
-    //     console.log("Search has been submitted");
-    //     let q = document.getElementById("flightSearchInput")
-    //     flightSearch(q);
-    //   }
       
-    flightSearch = () => {
-        if (this.state.flights.length !== 100) {
-            this.getFlightData()
-            //this.setState({flights: []})
-        }
-
-
-        console.log(this.state.flights)
-
-
-      };
 
       getFlightData = () => {
           //api call only needs to occur once
-          fetch('http://api.aviationstack.com/v1/flights?access_key=19af92ce01f489a1a4c60b022a1eb4cb&flight_icao='+ this.state.userICAO +'').then(res => res.json()).then((result) => {
+          //does not work as subscription does not support https links but browsers default to https
+          fetch(`http://api.aviationstack.com/v1/flights?access_key=d0054d841ed750cf7ef5afd7fa982104`).then(res => res.json()).then((result) => {
               console.log(result.data)
-              this.setState({flights: result.data})
+              //this.setState({flights: result.data})
             // for (let i = 0; i < result.data.length; i++) {
             //     this.setState({flights: this.state.flights.push(result.data[i])})
 
@@ -40,13 +25,17 @@ class FlightSearch extends Component{
             }).catch()
       }
       
+      UpdateVal = (event) => {
+        this.setState({userICAO: event.target.value})
+        console.log(this.state.userICAO)
+      }
 
       render() {
         return(
 
             <div>
-                <input type="search" id="flightSearchInput" name="flightSearchInput" placeholder="Search for flight number..."></input>
-                <button type="submit" id="flightSearchButton" onClick={this.flightSearch}>Search</button>
+                <input type="search"  onChange={this.UpdateVal} id="flightSearchInput" name="flightSearchInput" placeholder="Search for flight number..."></input>
+                <button type="submit" id="flightSearchButton" onClick={this.getFlightData}>Search</button>
             </div>
     
         );

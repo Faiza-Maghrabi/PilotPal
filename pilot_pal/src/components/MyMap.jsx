@@ -10,7 +10,7 @@ import './MyMap.css';
 import './popUp.css';
 import PullUpMenu from './PullUpMenu';
 import WeatherBox from './WeatherBox';
-import FlightSearch from './FlightSearch';
+// import FlightSearch from './FlightSearch';
 
 
 
@@ -20,6 +20,7 @@ class MyMap extends Component {
     super(props);
     this.state = {
       showBox: false,
+      showPullUp: false,
       weatherdesc: '',
       portName: '',
       temp: '',
@@ -30,12 +31,15 @@ class MyMap extends Component {
       windDeg: '',
       currentWeather: {},
       dailyWeather: {},
+
+      userVal: '',
     };
   }
 
   //method to hide Weather
   resetShowBox = () => {
     this.setState({ showBox: false });
+    if (this.state.showPullUp === true){this.setState({showPullUp: false})}
   };
 
   //initial styling for the countries in the country geojson
@@ -128,51 +132,13 @@ class MyMap extends Component {
       portName = point.properties.name;
     }
 
-    // var radval = 3;
-    // if (layer.map.zoom < 5){radval = layer.map.zoom - 2}
-
-    // layer.setStyle({
-    //   radius: radval
-    // });
-
     //click event for each point, retreives weather data and changes component states accordingly for the WeatherBox
     layer.on({
       click: async (e) => {
         var x = point.geometry.coordinates[1];
         var y = point.geometry.coordinates[0];
+        this.setWeatherStates(x, y, portName)
 
-        // var [data,dataLater] = await weatherAPI(x, y);
-        // console.log("dataLater: ", dataLater)
-        // console.log("data now:", data)
-        // // console.log(this.state.showBox)
-        // this.setState({showBox: true, weatherdesc: data.weatherDesc, portName: portName, temp: data.temp, pressure: data.pressure, humidity: data.humidity, visibility: data.visibility, windspeed: data.windSpeed, windDeg: data.windDeg})
-
-        weatherAPI(x, y).then((data) => {
-          const { currentWeather, dailyWeather } = data;
-          this.setState(
-            (prevState) => {
-              // console.log('currentWeather', currentWeather);
-              // console.log('dailyWeather', dailyWeather);
-              return {
-                ...prevState,
-                currentWeather: currentWeather,
-                dailyWeather: dailyWeather,
-                showBox: true,
-                weatherdesc: currentWeather.weatherDesc,
-                portName: portName,
-                temp: currentWeather.temp,
-                pressure: currentWeather.pressure,
-                humidity: currentWeather.humidity,
-                visibility: currentWeather.visibility,
-                windspeed: currentWeather.windSpeed,
-                windDeg: currentWeather.windDeg,
-              };
-            },
-            () => {
-              // console.log('Updated state:', this.state);
-            }
-          );
-        });
       },
 
       mouseover: () => {
@@ -188,26 +154,54 @@ class MyMap extends Component {
     });
   };
 
+  setWeatherStates = (x,y, name) =>{
+    weatherAPI(x, y).then((data) => {
+      const { currentWeather, dailyWeather } = data;
+      this.setState(
+        (prevState) => {
+          return {
+            ...prevState,
+            currentWeather: currentWeather,
+            dailyWeather: dailyWeather,
+            showBox: true,
+            showPullUp: true,
+            weatherdesc: currentWeather.weatherDesc,
+            portName: name,
+            temp: currentWeather.temp,
+            pressure: currentWeather.pressure,
+            humidity: currentWeather.humidity,
+            visibility: currentWeather.visibility,
+            windspeed: currentWeather.windSpeed,
+            windDeg: currentWeather.windDeg,
+          };
+        },
+      );
+    });
+  }
+
+  //method to update internal state according to user input
+  UpdateVal = (event) => {
+    this.setState({userVal: event.target.value})
+  }
+
+  //uses user inputs to get the latlong values for the location - this is used to get weather
+  OutputSearch = async () => {
+    var data = await LatLongSearch(this.state.userVal)
+    if (data === null){return}
+    this.setWeatherStates(data[0], data[1], this.state.userVal)
+
+  }
+
   //RENDERING MAP USING GEOJSON AND MAP COMPONENT
-  //fight search bar, weatherbox, map container and pull up menu are all defined here for user interaction
+  //search bar, weatherbox, map container and pull up menu are all defined here for user interaction
   render() {
     return (
       <div>
-{/* 
-        <form id="flightSearchForm" action="#" onSubmit={searchSubmitted}>
-          <input type="search" id="flightSearchInput" name="flightSearchInput" placeholder="Search for flight number..."></input>
-          <button type="submit" id="flightSearchButton"> Search</button>
-        </form> */}
 
-        {/* <script>
-          const f = document.getElementById("flightSearchForm");
-          f.addEventListener("submit", searchSubmitted)
-          event.preventDefault()
-        </script> */}
-
-       {/* <input type="text" id="flightSearchBar" onKeyUp={flightSearch()} placeholder="Search for flights..."></input> */}
-
-        <FlightSearch />
+        <div>
+          <input type="search"  onChange={this.UpdateVal} id="flightSearchInput" placeholder="Search for location..."></input>
+          <button type="submit" id="flightSearchButton" onClick={this.OutputSearch}> Search</button>
+        </div>
 
         <WeatherBox
           show={this.state.showBox}
@@ -222,7 +216,7 @@ class MyMap extends Component {
           reset={this.resetShowBox}
         />
 
-        <MapContainer style={{ height: '93vh' }} center={[50, 0]} zoom={5}>
+        <MapContainer style={{ height: '95vh' }} center={[50, 0]} zoom={5}>
           <GeoJSON
             style={this.countryStyle}
             data={countries.features}
@@ -235,7 +229,7 @@ class MyMap extends Component {
           ></GeoJSON>
         </MapContainer>
 
-        <PullUpMenu onOptionClick={this.handleOptionClick} />
+        <PullUpMenu show={this.state.showPullUp} onOptionClick={this.handleOptionClick} />
       </div>
     );
   }
@@ -253,7 +247,6 @@ async function weatherAPI(x, y) {
       '&appid=ec90bd9de7731df93b1303ecdd186b7d'
   );
   var locationData = await location.json();
-   console.log(locationData);
 
   var weatherDataMap = {
     weatherDesc: locationData.weather[0].description,
@@ -314,11 +307,6 @@ async function weatherAPI(x, y) {
     ],
   };
 
-  //console.log("tomorrow: ",threeDays.list[12]);
-  // console.log("day after tomorrow: ",threeDays.list[20]);
-  // console.log("day after day after tomorrow: ",threeDays.list[28]);
-  // console.log(nextFewDays)
-
   return { currentWeather: weatherDataMap, dailyWeather: nextFewDays };
 }
 
@@ -342,6 +330,19 @@ async function countryColour(countryName, countryCode) {
   );
   var locationData = await location.json();
   return locationData.main.temp;
+}
+
+//gets user search and returns latlong values
+async function LatLongSearch(loc){
+  try {
+    const location = await fetch(
+      'http://api.openweathermap.org/geo/1.0/direct?q='+loc+'&appid=ec90bd9de7731df93b1303ecdd186b7d'
+    );
+    var locationData = await location.json();
+    return [locationData[0].lat, locationData[0].lon]
+  } catch (error) {
+    return null
+  }
 }
 
 export default MyMap;

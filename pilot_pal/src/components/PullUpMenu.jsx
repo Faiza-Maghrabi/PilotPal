@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Button, Dropdown } from 'react-bootstrap';
 import './PullUpMenu.css';
 
-function PullUpMenu({ onOptionClick }) {
+function PullUpMenu({show, onOptionClick }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  if (!show){return <></>;}
 
   const toggle = () => {
     setIsOpen(!isOpen);
