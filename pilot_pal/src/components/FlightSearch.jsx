@@ -21,22 +21,30 @@ class FlightSearch extends Component{
         //   access_key: "19af92ce01f489a1a4c60b022a1eb4cb",
         //   flight_iata: iata
         // })
-        const logs = []
+        // var logs = []
+        if (this.state.flights.length !== 100) {
+            this.getFlightData()
+            //this.setState({flights: []})
+        }
 
-        fetch('http://api.aviationstack.com/v1/flights?access_key=1060fc65fd48ff212ed8d543d8c1ce17').then(res => res.json()).then((result) => {
-            console.log(result.length)
-            for (let i = 0; i < result.length; i++) {
-                console.log(result[i])
-                logs.push(result[i])
-                
-            }
-        }).catch()
-
-        console.log(logs)
+        console.log("test")
+        console.log(this.state.flights)
 
         // this.setState({})
         // console.log(this.setState)
       };
+
+      getFlightData = () => {
+          //api call only needs to occur once
+          fetch('http://api.aviationstack.com/v1/flights?access_key=1060fc65fd48ff212ed8d543d8c1ce17').then(res => res.json()).then((result) => {
+            for (let i = 0; i < result.data.length; i++) {
+                this.setState({flights: this.state.flights.push(result.data[i])})
+
+            }
+            }).catch()
+
+ 
+      }
       
 
       render() {
